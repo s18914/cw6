@@ -22,7 +22,6 @@ namespace cw6.Middleware
         public async Task InvokeAsync(HttpContext httpContext, IStudentDbService service)
         {
             httpContext.Request.EnableBuffering();
-            httpContext.Request.EnableBuffering();
 
             if (httpContext.Request != null)
             {
