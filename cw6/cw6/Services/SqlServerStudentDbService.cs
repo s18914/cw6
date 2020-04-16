@@ -14,11 +14,12 @@ namespace cw6.Services
             {
                 return new Student { IdStudent = 1, FirstName ="Emilia", LastName ="Cholewicka" };
             }
+            return null;
         }
 
         public IEnumerable<Student> GetStudents()
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }
