@@ -22,21 +22,27 @@ namespace cw6.Middleware
         public async Task InvokeAsync(HttpContext httpContext, IStudentDbService service)
         {
             httpContext.Request.EnableBuffering();
+            httpContext.Request.EnableBuffering();
 
             if (httpContext.Request != null)
             {
-                string sciezka = httpContext.Request.Path; //"weatherforecast/cos"
+                string sciezka = httpContext.Request.Path; // api/students
                 string querystring = httpContext.Request?.QueryString.ToString();
-                string metoda = httpContext.Request.Method.ToString();
-                string bodyStr = "";
+                string metoda = httpContext.Request.Method;
+                string body = "";
 
                 using (StreamReader reader
                  = new StreamReader(httpContext.Request.Body, Encoding.UTF8, true, 1024, true))
                 {
-                    bodyStr = await reader.ReadToEndAsync();
+                    body = await reader.ReadToEndAsync();
+                    httpContext.Request.Body.Position = 0;
                 }
 
-                //logowanie do pliku
+                string query = httpContext.Request?.QueryString.ToString();
+                using (StreamWriter writer = new StreamWriter(Path.Combine("requestLog.txt"), true))
+                {
+                    writer.WriteLine($"{metoda} | {sciezka} | {body} | {query}");
+                }
             }
 
             await _next(httpContext);
