@@ -1,11 +1,14 @@
-﻿using System;
+﻿using cw6.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace cw6.Services
 {
-    interface IStudentDbService
+    public interface IStudentDbService
     {
+        IEnumerable<Student> GetStudents();
+        Student GetStudent(string index);
     }
 }

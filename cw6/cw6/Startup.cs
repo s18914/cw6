@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cw6.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,7 @@ namespace cw6
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IStudentDbService, SqlServerStudentDbService>();
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -36,7 +38,7 @@ namespace cw6
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStudentDbService service)
         {
             if (env.IsDevelopment())
             {
@@ -57,6 +59,13 @@ namespace cw6
                     await context.Response.WriteAsync("Musisz podac nr indeksu");
                     return;
                 }
+                string index = context.Request.Headers["Index"].ToString();
+                var stud = service.GetStudent(index);
+                if(stud == null)
+                {
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
+                }
+
                 await next();
             });
 
